@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso8859-1"?>
+<TaskBarFolder>
+  <toolTips>true</toolTips>
+  <TaskBarIcon>D:\Daten\Pictures\Icons\WINDOWS 10 10056 ICONS\#5325.ico</TaskBarIcon>
+  <folders>
+	<folder name="Progs">
+		<path>D:\Daten\quickLinks\Progs</path>
+		<icon></icon>
+	</folder>
+	<folder name="Grafik">
+		<path>D:\Progs\Grafik</path>
+		<icon></icon>
+	</folder>
+  </folders>
+</TaskBarFolder>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso8859-1"?>
+<TaskBarFolder>
+  <toolTips>False</toolTips>
+  <fileExt>False</fileExt>
+  <hidden>False</hidden>
+  <small>True</small>
+  <TaskBarIcon>
+  </TaskBarIcon>
+  <folders>
+    <folder name="Progs">
+      <path>D:\Daten\quickLinks\Progs</path>
+      <icon>
+      </icon>
+    </folder>
+  </folders>
+</TaskBarFolder>
