@@ -9,11 +9,15 @@ Left-Click opens either Single-Folder:
 ![image](https://github.com/user-attachments/assets/da70caee-69c7-4320-a9b3-708ea6f153d2)
   
 or Multiple-Folders:   
-![image](https://github.com/user-attachments/assets/ab9e1edf-196a-4fbf-a4ee-1f253f359119)
+![image](https://github.com/user-attachments/assets/ab9e1edf-196a-4fbf-a4ee-1f253f359119)   
     
-![image](https://github.com/user-attachments/assets/fac0608d-4d9c-43fb-b3e9-dcef8005cc24)
+![image](https://github.com/user-attachments/assets/fac0608d-4d9c-43fb-b3e9-dcef8005cc24)   
   
-Right-Click for context-menue:    
+right-click on folder or file opens the (old) windows context-menue   
+double-click on folder opens the folder in windows-explorer  
+double-click on file opens the file with the associated programm   
+   
+Right-Click on the task-bar icon for context-menue:    
 ![image](https://github.com/user-attachments/assets/a42bf6be-14b0-4e57-b76b-7afad4863467)  
   
 Settings-Menue:    
@@ -43,7 +47,7 @@ Issues:
 
 The first time the menue opens, opening subfolders may be very slow.  
 This seems to be a windows problem, as this also was the case with the former windows 10 taskbar-folder menue  
-This also happens when adding a folder to the quicklinks in the openShell start-menue
+This also happens when adding a folder to the quicklinks in the openShell start-menue   
 Interestingly it seems not to be happening when using a root-folder like C:\   
 Also in debug mode in visual studio it seems to work properly   
 I was not yet able to figure out why this is the case... if anyone has an idea I would really appreciate if You could tell me!   
