@@ -44,10 +44,14 @@ namespace TaskBarFolder
         };
         public class Win32
         {
+            //uFlags
             public const uint SHGFI_ICON = 0x100;
-            public const uint SHGFI_LARGEICON = 0x0;    // 'Large icon
-            public const uint SHGFI_SMALLICON = 0x1;    // 'Small icon
+            public const uint SHGFI_LARGEICON = 0x0; 
+            public const uint SHGFI_SMALLICON = 0x1; 
             public const uint SHGFI_TYPENAME = 0x400;
+            public const uint SHGFI_USEFILEATTRIBUTES = 0x10;
+            //dwFileAttributes
+            public const uint FILE_ATTRIBUTE_NORMAL = 0x80;
 
             [DllImport("shell32.dll")]
             public static extern IntPtr SHGetFileInfo(string pszPath,
@@ -55,10 +59,18 @@ namespace TaskBarFolder
                                         ref SHFILEINFO psfi,
                                         uint cbSizeFileInfo,
                                         uint uFlags);
-            [DllImport("user32")]
+            [DllImport("user32", EntryPoint = "DestroyIcon", SetLastError = true)]
             public static extern int DestroyIcon(IntPtr hIcon);
 
         }
+
+        [DllImport("shell32.dll")]
+        static extern uint ExtractIconEx(string szFileName, 
+            int nIconIndex,
+            IntPtr[] phiconLarge, 
+            IntPtr[] phiconSmall, 
+            uint nIcons);
+
         [DllImport("shell32.dll")] //, CharSet = CharSet.Auto
         public static extern int SHGetSpecialFolderLocation(IntPtr hWnd, CSIDL nFolder, out IntPtr Pidl);
         [Flags]

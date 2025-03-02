@@ -411,129 +411,6 @@ namespace TaskBarFolder
             }
         }
 
-        ToolStripMenuItemEx fileInfo(FileInfo file, int iLength)
-        {
-            uint ICON = (uint)(f1.smallIcons ? 0x1 : 0x0);
-            ToolStripMenuItemEx iItem = new ToolStripMenuItemEx();
-            ShellExtensions.SHFILEINFO shinfo = new ShellExtensions.SHFILEINFO();
-            IntPtr hImgSmall = ShellExtensions.Win32.SHGetFileInfo(file.FullName, 0, ref shinfo,
-               (uint)Marshal.SizeOf(shinfo),
-                ShellExtensions.Win32.SHGFI_ICON |
-                ICON |
-                ShellExtensions.Win32.SHGFI_TYPENAME);
-            System.Drawing.Icon shellIcon;
-            if (shinfo.hIcon == IntPtr.Zero) shellIcon = System.Drawing.Icon.ExtractAssociatedIcon(file.FullName);
-            else shellIcon = System.Drawing.Icon.FromHandle(shinfo.hIcon);
-            Image iImage = shellIcon.ToBitmap();
-
-            ShellExtensions.Win32.DestroyIcon(shinfo.hIcon);
-            if (!CheckFilePermission(file.FullName))
-                iImage = f1.imageList.Images[3];
-            if(f1.fileExt)
-                iItem = new ToolStripMenuItemEx(file.Name, iImage);
-            else
-                iItem = new ToolStripMenuItemEx(Path.GetFileNameWithoutExtension(file.Name), iImage);
-            iItem.DoubleClick += new EventHandler(iItem_DoubleClick);
-            iItem.MouseDown += new MouseEventHandler(iItem_Click);
-            iItem.Path = file.FullName;
-            iItem.compressed = false;
-            string[] sCultureText;
-            if (System.Threading.Thread.CurrentThread.CurrentUICulture.ToString() == "de-DE")
-                sCultureText = de;
-            else
-                sCultureText = en;
-            if (f1.tooltips)
-            {
-                iItem.ToolTipText = sCultureText[0] + shinfo.szTypeName + "\n";
-                iItem.ToolTipText += sCultureText[1] + CalcSize(file.Length) + "\n";
-                iItem.ToolTipText += sCultureText[2] + file.LastWriteTime + "\n";
-                iItem.ToolTipText += sCultureText[3] + file.CreationTime + "\n";
-            }
-            return iItem;
-        }
-
-        ToolStripMenuItemEx zipInfo(ZipEntry entry)
-        {
-            ToolStripMenuItemEx iItem = new ToolStripMenuItemEx();
-            iItem = new ToolStripMenuItemEx(entry.Name, f1.imageList.Images[1]);
-            iItem.DoubleClick += new EventHandler(iItem_DoubleClick);
-            iItem.MouseDown += new MouseEventHandler(iItem_Click);
-            iItem.Path = entry.ZipFileIndex.ToString();
-            iItem.zipEntry = entry.ZipFileIndex;
-            iItem.compressed = true;
-            string[] sCultureText;
-            if (System.Threading.Thread.CurrentThread.CurrentUICulture.ToString() == "de-DE")
-                sCultureText = de_zip;
-            else
-                sCultureText = en_zip;
-
-            if (f1.tooltips)
-            {
-                iItem.ToolTipText = sCultureText[0] + CalcSize(entry.CompressedSize) + "\n";
-                iItem.ToolTipText += sCultureText[1] + CalcSize(entry.Size) + "\n";
-                iItem.ToolTipText += sCultureText[2] + entry.DateTime.ToString() + "\n";
-                iItem.ToolTipText += sCultureText[3] + entry.Comment + "\n";
-            }
-            return iItem;
-        }
-
-        string CalcSize(float lVal)
-        {
-            if (lVal < 1024)
-                return lVal.ToString() + " Bytes";
-            else
-            {
-                lVal /= 1024;
-                if (lVal < 1024)
-                    return lVal.ToString("##.##") + " KB";
-                else
-                {
-                    lVal /= 1024;
-                    if (lVal < 1024)
-                        return lVal.ToString("##.##") + " MB";
-                    else
-                    {
-                        lVal /= 1024;
-                        return lVal.ToString("##.##") + " GB";
-                    }
-
-                }
-            }
-        }
-        public bool CheckFolderPermission(string folderPath)
-        {
-            DirectoryInfo dirInfo = new DirectoryInfo(folderPath);
-            try
-            {
-                DirectorySecurity dirAC = dirInfo.GetAccessControl(AccessControlSections.Access);
-                return true;
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return false;
-            }
-            catch (InvalidOperationException)
-            {
-                return false;
-            }
-        }
-        public bool CheckFilePermission(string filePath)
-        {
-            FileInfo fileInfo = new FileInfo(filePath);
-            try
-            {
-                FileSecurity fileSecurity = fileInfo.GetAccessControl(AccessControlSections.Access);
-                return true;
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return false;
-            }
-            catch (InvalidOperationException)
-            {
-                return false;
-            }
-        }
         void iItem_Click(object sender, MouseEventArgs e)
         {
         //    Point location = new Point(f1.Location.X, f1.Location.Y + yPos);
@@ -626,9 +503,128 @@ namespace TaskBarFolder
             System.Diagnostics.Process.Start(rootDir);
         }
 
-        void cMenueLeave(object sender, EventArgs e)
+        ToolStripMenuItemEx fileInfo(FileInfo file, int iLength)
         {
-            cMenue.Close();
+            uint ICON = (uint)(f1.smallIcons ? 0x1 : 0x0);
+            ToolStripMenuItemEx iItem = new ToolStripMenuItemEx();
+            ShellExtensions.SHFILEINFO shinfo = new ShellExtensions.SHFILEINFO();
+            IntPtr hImgSmall = ShellExtensions.Win32.SHGetFileInfo(file.FullName, ShellExtensions.Win32.FILE_ATTRIBUTE_NORMAL, ref shinfo,
+               (uint)Marshal.SizeOf(shinfo),
+//                ShellExtensions.Win32.SHGFI_ICON |
+                ICON |
+                ShellExtensions.Win32.SHGFI_TYPENAME |
+                ShellExtensions.Win32.SHGFI_USEFILEATTRIBUTES);
+            System.Drawing.Icon shellIcon;
+            if (shinfo.hIcon == IntPtr.Zero) shellIcon = System.Drawing.Icon.ExtractAssociatedIcon(file.FullName);
+            else shellIcon = System.Drawing.Icon.FromHandle(shinfo.hIcon);
+            Image iImage = shellIcon.ToBitmap();
+
+            ShellExtensions.Win32.DestroyIcon(shinfo.hIcon);
+            if (!CheckFilePermission(file.FullName))
+                iImage = f1.imageList.Images[3];
+            if(f1.fileExt)
+                iItem = new ToolStripMenuItemEx(file.Name, iImage);
+            else
+                iItem = new ToolStripMenuItemEx(Path.GetFileNameWithoutExtension(file.Name), iImage);
+            iItem.DoubleClick += new EventHandler(iItem_DoubleClick);
+            iItem.MouseDown += new MouseEventHandler(iItem_Click);
+            iItem.Path = file.FullName;
+            iItem.compressed = false;
+            string[] sCultureText;
+            if (System.Threading.Thread.CurrentThread.CurrentUICulture.ToString() == "de-DE")
+                sCultureText = de;
+            else
+                sCultureText = en;
+            if (f1.tooltips)
+            {
+                iItem.ToolTipText = sCultureText[0] + shinfo.szTypeName + "\n";
+                iItem.ToolTipText += sCultureText[1] + CalcSize(file.Length) + "\n";
+                iItem.ToolTipText += sCultureText[2] + file.LastWriteTime + "\n";
+                iItem.ToolTipText += sCultureText[3] + file.CreationTime + "\n";
+            }
+            return iItem;
+        }
+
+        ToolStripMenuItemEx zipInfo(ZipEntry entry)
+        {
+            ToolStripMenuItemEx iItem = new ToolStripMenuItemEx();
+            iItem = new ToolStripMenuItemEx(entry.Name, f1.imageList.Images[1]);
+            iItem.DoubleClick += new EventHandler(iItem_DoubleClick);
+            iItem.MouseDown += new MouseEventHandler(iItem_Click);
+            iItem.Path = entry.ZipFileIndex.ToString();
+            iItem.zipEntry = entry.ZipFileIndex;
+            iItem.compressed = true;
+            string[] sCultureText;
+            if (System.Threading.Thread.CurrentThread.CurrentUICulture.ToString() == "de-DE")
+                sCultureText = de_zip;
+            else
+                sCultureText = en_zip;
+
+            if (f1.tooltips)
+            {
+                iItem.ToolTipText = sCultureText[0] + CalcSize(entry.CompressedSize) + "\n";
+                iItem.ToolTipText += sCultureText[1] + CalcSize(entry.Size) + "\n";
+                iItem.ToolTipText += sCultureText[2] + entry.DateTime.ToString() + "\n";
+                iItem.ToolTipText += sCultureText[3] + entry.Comment + "\n";
+            }
+            return iItem;
+        }
+        string CalcSize(float lVal)
+        {
+            if (lVal < 1024)
+                return lVal.ToString() + " Bytes";
+            else
+            {
+                lVal /= 1024;
+                if (lVal < 1024)
+                    return lVal.ToString("##.##") + " KB";
+                else
+                {
+                    lVal /= 1024;
+                    if (lVal < 1024)
+                        return lVal.ToString("##.##") + " MB";
+                    else
+                    {
+                        lVal /= 1024;
+                        return lVal.ToString("##.##") + " GB";
+                    }
+
+                }
+            }
+        }
+        public bool CheckFolderPermission(string folderPath)
+        {
+            DirectoryInfo dirInfo = new DirectoryInfo(folderPath);
+            try
+            {
+                DirectorySecurity dirAC = dirInfo.GetAccessControl(AccessControlSections.Access);
+                return true;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return false;
+            }
+            catch (InvalidOperationException)
+            {
+                return false;
+            }
+        }
+        public bool CheckFilePermission(string filePath)
+        {
+            FileInfo fileInfo = new FileInfo(filePath);
+            try
+            {
+                FileSecurity fileSecurity = fileInfo.GetAccessControl(AccessControlSections.Access);
+                return true;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return false;
+            }
+            catch (InvalidOperationException)
+            {
+                return false;
+            }
         }
 
         string[] de = { "Typ: ", "Größe: ", "Geändert: ", "Erstellt: " };
