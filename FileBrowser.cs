@@ -190,7 +190,7 @@ namespace TaskBarFolder
                     }
                     tsMenDir = tsMenDir.Where(c => c != null).ToArray();
                     tsMenDirs[k].DropDownItems.AddRange(tsMenDir);
-
+/*
                     // Integration of SharpZipLib for compressed folders
                     var query = (from fileExt in fileInf
                                  where lExt.Contains(fileExt.Extension)
@@ -213,13 +213,27 @@ namespace TaskBarFolder
                         tsMenDirs[k].DropDownItems.AddRange(tsMenDir);
                     }
                     // *************************************************************
-
+*/
                     i = 0;
                     foreach (FileInfo file in fileInf)
                     {
                         if (f1.hidden | ((file.Attributes & FileAttributes.Hidden) == 0))
-                        { 
-                            tsMenFile[i] = fileInfo(file, tsMenFile.Length);
+                        {
+                            if (lExt.Contains(file.Extension))
+                            {
+                                if (CheckFilePermission(file.FullName))
+                                    tsMenFile[i] = new ToolStripMenuItemEx(file.Name, f1.imageList.Images[2]);
+                                else
+                                    tsMenFile[i] = new ToolStripMenuItemEx(file.Name, f1.imageList.Images[3]);
+                                tsMenFile[i].Path = file.FullName;
+                                tsMenFile[i].compressed = true;
+                                tsMenFile[i].DropDownItems.Add("...");
+                                tsMenFile[i].DropDownOpening += new EventHandler(ziItem_DropDownOpening);
+                            }
+                            else
+                            {
+                                tsMenFile[i] = fileInfo(file, tsMenFile.Length);
+                            }
                             i++;
                         }
                     }
@@ -304,7 +318,7 @@ namespace TaskBarFolder
                if (fFile != null)
                 {
                     // Integration of SharpZipLib for compressed folders
-
+/*
                      var query = (from fileExt in fFile
                                  where lExt.Contains(fileExt.Extension)
                                  select fileExt)
@@ -344,6 +358,34 @@ namespace TaskBarFolder
                                 iItem[i] = fileInfo(file, fFile.Length);
                                 i++;
                             }
+                        }
+                    }
+                    iItem = iItem.Where(c => c != null).ToArray();
+                    iParentItem.DropDownItems.AddRange(iItem);
+*/
+                    i = 0;
+                    iItem = new ToolStripMenuItemEx[fFile.Length];
+                    foreach (FileInfo file in fFile)
+                    {
+                        if (f1.hidden | ((file.Attributes & FileAttributes.Hidden) == 0))
+                        {
+                            if(lExt.Contains(file.Extension))
+                            {
+                                if (CheckFilePermission(file.FullName))
+                                    iItem[i] = new ToolStripMenuItemEx(file.Name, f1.imageList.Images[2]);
+                                else
+                                    iItem[i] = new ToolStripMenuItemEx(file.Name, f1.imageList.Images[3]);
+                                iItem[i].Path = file.FullName;
+                                iItem[i].DropDownItems.Add("...");
+                                iItem[i].compressed = true;
+                                iItem[i].DropDownOpening += new EventHandler(ziItem_DropDownOpening);
+                                iItem[i].MouseDown += new MouseEventHandler(iItem_Click);
+                            }
+                            else
+                            {
+                                iItem[i] = fileInfo(file, fFile.Length);
+                            }
+                            i++;
                         }
                     }
                     iItem = iItem.Where(c => c != null).ToArray();
