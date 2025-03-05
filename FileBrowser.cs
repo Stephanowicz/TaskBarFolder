@@ -56,7 +56,7 @@ namespace TaskBarFolder
     {
         string _Path;
 
-        public ToolStripDropDownItemEx():base()
+        public ToolStripDropDownItemEx() : base()
         {
         }
 
@@ -78,10 +78,10 @@ namespace TaskBarFolder
         long _zipEntry;
         bool _compressed;
 
-        public ToolStripMenuItemEx():base()
+        public ToolStripMenuItemEx() : base()
         {
         }
-        public ToolStripMenuItemEx(string Name, Image i):base(Name,i)
+        public ToolStripMenuItemEx(string Name, Image i) : base(Name, i)
         {
         }
 
@@ -124,15 +124,15 @@ namespace TaskBarFolder
     {
         Form1 f1;
         string rootDir;
-        int xPos,yPos;
- //       List<string> lExt = new List<string>(new string[] { ".zip", "r.gz", ".tar", ".bz2", ".gz" });
-        List<string> lExt = new List<string>(new string[] { ".zip"});
+        int xPos, yPos;
+        //       List<string> lExt = new List<string>(new string[] { ".zip", "r.gz", ".tar", ".bz2", ".gz" });
+        List<string> lExt = new List<string>(new string[] { ".zip" });
 
         public FileBrowser(ContextMenuStrip cms, int xPos, int yPos, Form1 form)
         {
             this.xPos = xPos;   //position of mouse above taskbaricon
             this.yPos = yPos;
-        //    cMenue = f1.cmsFolderBrowser;
+            //    cMenue = f1.cmsFolderBrowser;
             cMenue = cms;
             f1 = form;
         }
@@ -190,30 +190,7 @@ namespace TaskBarFolder
                     }
                     tsMenDir = tsMenDir.Where(c => c != null).ToArray();
                     tsMenDirs[k].DropDownItems.AddRange(tsMenDir);
-/*
-                    // Integration of SharpZipLib for compressed folders
-                    var query = (from fileExt in fileInf
-                                 where lExt.Contains(fileExt.Extension)
-                                 select fileExt)
-                             .ToList();
 
-                    i = 0;
-                    if (query.Count > 0)
-                    {
-                        tsMenDir = new ToolStripMenuItemEx[query.Count];
-                        foreach (FileInfo fi in query)
-                        {
-                            tsMenDir[i] = new ToolStripMenuItemEx(fi.Name, f1.imageList.Images[2]);
-                            tsMenDir[i].Path = fi.FullName;
-                            tsMenDir[i].compressed = true;
-                            tsMenDir[i].DropDownItems.Add("...");
-                            tsMenDir[i].DropDownOpening += new EventHandler(ziItem_DropDownOpening);
-                            i++;
-                        }
-                        tsMenDirs[k].DropDownItems.AddRange(tsMenDir);
-                    }
-                    // *************************************************************
-*/
                     i = 0;
                     foreach (FileInfo file in fileInf)
                     {
@@ -258,7 +235,7 @@ namespace TaskBarFolder
             }
             else cMenue.Items.AddRange(tsMenDirs);
         }
-       void iItem_DropDownOpening(object sender, EventArgs e)
+        void iItem_DropDownOpening(object sender, EventArgs e)
         {
             ToolStripMenuItemEx iParentItem = (ToolStripMenuItemEx)sender;
             string DirTemp = iParentItem.Path;
@@ -277,7 +254,7 @@ namespace TaskBarFolder
                 }
                 catch (UnauthorizedAccessException)
                 {
-                     ; ;
+                    ; ;
                 }
                 ToolStripMenuItemEx[] iItem;
 
@@ -289,7 +266,7 @@ namespace TaskBarFolder
                     {
                         if (f1.hidden | ((dDir.Attributes & FileAttributes.Hidden) == 0))
                         {
-                            if(CheckFolderPermission(dDir.FullName))
+                            if (CheckFolderPermission(dDir.FullName))
                                 iItem[i] = new ToolStripMenuItemEx(dDir.Name, f1.imageList.Images[0]);
                             else
                                 iItem[i] = new ToolStripMenuItemEx(dDir.Name, f1.imageList.Images[3]);
@@ -312,64 +289,18 @@ namespace TaskBarFolder
                 }
                 catch (UnauthorizedAccessException)
                 {
-                     ; ;
+                    ; ;
                 }
                 i = 0;
-               if (fFile != null)
+                if (fFile != null)
                 {
-                    // Integration of SharpZipLib for compressed folders
-/*
-                     var query = (from fileExt in fFile
-                                 where lExt.Contains(fileExt.Extension)
-                                 select fileExt)
-                             .ToList();
-
-
-                    if (query.Count > 0)
-                    {
-                        iItem = new ToolStripMenuItemEx[query.Count];
-                        foreach (FileInfo fi in query)
-                        {
-                            if(f1.hidden | ((fi.Attributes & FileAttributes.Hidden) == 0)) 
-                            {
-                                if (CheckFilePermission(fi.FullName))
-                                    iItem[i] = new ToolStripMenuItemEx(fi.Name, f1.imageList.Images[2]);
-                                else
-                                    iItem[i] = new ToolStripMenuItemEx(fi.Name, f1.imageList.Images[3]);
-                                iItem[i].Path = fi.FullName;
-                                iItem[i].DropDownItems.Add("...");
-                                iItem[i].DropDownOpening += new EventHandler(ziItem_DropDownOpening);
-                                iItem[i].MouseDown += new MouseEventHandler(iItem_Click);
-                                i++;
-                            }
-                        }
-                        iParentItem.DropDownItems.AddRange(iItem);
-                    }
-                    //********************************************************
-
-                    i = 0;
-                    iItem = new ToolStripMenuItemEx[fFile.Length - query.Count];
-                    foreach (FileInfo file in fFile)
-                    {
-                        if(!lExt.Contains(file.Extension))
-                        {
-                            if (f1.hidden | ((file.Attributes & FileAttributes.Hidden) == 0))
-                            {
-                                iItem[i] = fileInfo(file, fFile.Length);
-                                i++;
-                            }
-                        }
-                    }
-                    iItem = iItem.Where(c => c != null).ToArray();
-                    iParentItem.DropDownItems.AddRange(iItem);
-*/
                     i = 0;
                     iItem = new ToolStripMenuItemEx[fFile.Length];
                     foreach (FileInfo file in fFile)
                     {
                         if (f1.hidden | ((file.Attributes & FileAttributes.Hidden) == 0))
                         {
-                            if(lExt.Contains(file.Extension))
+                            if (lExt.Contains(file.Extension))
                             {
                                 if (CheckFilePermission(file.FullName))
                                     iItem[i] = new ToolStripMenuItemEx(file.Name, f1.imageList.Images[2]);
@@ -399,7 +330,7 @@ namespace TaskBarFolder
             string DirTemp = iParentItem.Path;
             DirectoryInfo nodeDirInfo = new DirectoryInfo(DirTemp);
             int i = 0;
-           // if (iParentItem.compressed)
+            // if (iParentItem.compressed)
             {
                 switch (DirTemp.Substring(DirTemp.Length - 4, 4))
                 {
@@ -410,9 +341,9 @@ namespace TaskBarFolder
                             ToolStripMenuItemEx[] iItem = new ToolStripMenuItemEx[zipFile.Count];
                             foreach (ZipEntry entry in zipFile)
                             {
-                               iItem[i] = zipInfo(entry);
-                               iItem[i].Path = DirTemp;
-                               i++;
+                                iItem[i] = zipInfo(entry);
+                                iItem[i].Path = DirTemp;
+                                i++;
                             }
                             iParentItem.DropDownItems.Clear();
                             iParentItem.DropDownItems.AddRange(iItem);
@@ -426,7 +357,7 @@ namespace TaskBarFolder
                         break;
                     default:
                         break;
-                }   
+                }
             }
         }
 
@@ -434,7 +365,7 @@ namespace TaskBarFolder
         {
             if (e.Button == MouseButtons.Right)
             {
-              //  Point location = new Point(f1.Location.X, f1.Location.Y + yPos);
+                //  Point location = new Point(f1.Location.X, f1.Location.Y + yPos);
                 string dirSelected, dirRoot;
                 if (sender.GetType() == typeof(ToolStripMenuItemEx))
                     rootDir = ((ToolStripMenuItemEx)sender).Path;
@@ -447,7 +378,7 @@ namespace TaskBarFolder
                         dirRoot = nodeDirInfo.Parent.FullName.ToString();
                         dirSelected = nodeDirInfo.Name.ToString();
                         IShellContextMenu contextmen = new IShellContextMenu();
-                        contextmen.iContextMenu(dirRoot, dirSelected,false);
+                        contextmen.iContextMenu(dirRoot, dirSelected, false);
                     }
                 }
             }
@@ -455,12 +386,12 @@ namespace TaskBarFolder
 
         void iItem_Click(object sender, MouseEventArgs e)
         {
-        //    Point location = new Point(f1.Location.X, f1.Location.Y + yPos);
+            //    Point location = new Point(f1.Location.X, f1.Location.Y + yPos);
             if (e.Button == MouseButtons.Right)
             {
                 IShellContextMenu contextmen = new IShellContextMenu();
                 ToolStripMenuItemEx mItem = (ToolStripMenuItemEx)sender;
-                string root = mItem.Path.Substring(0, mItem.Path.LastIndexOf("\\")+1);
+                string root = mItem.Path.Substring(0, mItem.Path.LastIndexOf("\\") + 1);
                 string sItem = Path.GetFileName(mItem.Path);
                 contextmen.iContextMenu(root, sItem, false);
             }
@@ -521,8 +452,8 @@ namespace TaskBarFolder
 
             }
             else
-                proc.StartInfo.Arguments = " shell32.dll,ShellExec_RunDLL " + ((ToolStripMenuItemEx)sender).Path; 
-//                proc.StartInfo.Arguments = " shell32.dll,ShellExec_RunDLL " + rootDir + "\\" + sender.ToString();
+                proc.StartInfo.Arguments = " shell32.dll,ShellExec_RunDLL " + ((ToolStripMenuItemEx)sender).Path;
+            //                proc.StartInfo.Arguments = " shell32.dll,ShellExec_RunDLL " + rootDir + "\\" + sender.ToString();
             try
             {
                 if (proc.StartInfo.Arguments != "")
@@ -552,19 +483,24 @@ namespace TaskBarFolder
             ShellExtensions.SHFILEINFO shinfo = new ShellExtensions.SHFILEINFO();
             IntPtr hImgSmall = ShellExtensions.Win32.SHGetFileInfo(file.FullName, ShellExtensions.Win32.FILE_ATTRIBUTE_NORMAL, ref shinfo,
                (uint)Marshal.SizeOf(shinfo),
-//                ShellExtensions.Win32.SHGFI_ICON |
+                //                ShellExtensions.Win32.SHGFI_ICON |
                 ICON |
                 ShellExtensions.Win32.SHGFI_TYPENAME |
                 ShellExtensions.Win32.SHGFI_USEFILEATTRIBUTES);
             System.Drawing.Icon shellIcon;
             if (shinfo.hIcon == IntPtr.Zero) shellIcon = System.Drawing.Icon.ExtractAssociatedIcon(file.FullName);
             else shellIcon = System.Drawing.Icon.FromHandle(shinfo.hIcon);
-            Image iImage = shellIcon.ToBitmap();
+
+            Image iImage;
+            if (shellIcon == null)
+                iImage = f1.imageList.Images[1];
+            else
+                iImage = shellIcon.ToBitmap();
 
             ShellExtensions.Win32.DestroyIcon(shinfo.hIcon);
             if (!CheckFilePermission(file.FullName))
                 iImage = f1.imageList.Images[3];
-            if(f1.fileExt)
+            if (f1.fileExt)
                 iItem = new ToolStripMenuItemEx(file.Name, iImage);
             else
                 iItem = new ToolStripMenuItemEx(Path.GetFileNameWithoutExtension(file.Name), iImage);

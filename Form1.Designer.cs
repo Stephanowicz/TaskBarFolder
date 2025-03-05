@@ -69,10 +69,10 @@
             // 
             this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "folder_.png");
+            this.imageList1.Images.SetKeyName(0, "folder.png");
             this.imageList1.Images.SetKeyName(1, "file.png");
             this.imageList1.Images.SetKeyName(2, "zip.png");
-            this.imageList1.Images.SetKeyName(3, "lock1.png");
+            this.imageList1.Images.SetKeyName(3, "lock.png");
             // 
             // notifyIcon1
             // 

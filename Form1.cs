@@ -181,7 +181,7 @@ namespace TaskBarFolder
             bSmallIcons = cbSmallIcons.Checked;
             if (bSmallIcons)
             {
-                cmsFolderBrowser.ImageList = imageListSmall;
+               cmsFolderBrowser.ImageList = imageListSmall;
                 cmsFolderBrowser.ImageScalingSize = new Size(16, 16);
             }
             else
