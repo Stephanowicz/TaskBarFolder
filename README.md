@@ -49,9 +49,10 @@ The first time the menue opens, opening subfolders may be very slow.
 (This seems to be a windows problem, as this also was the case with the former windows 10 taskbar-folder menue  
 This also happens when adding a folder to the quicklinks in the openShell start-menue   
 Interestingly it 'seems' not to be happening when using a root-folder like C:\  ?)   
-The programm uses the win32API call [SHGetFileInfo](https://www.pinvoke.net/default.aspx/shell32.shgetfileinfo) wich is already faster than `System.Drawing.Icon.ExtractAssociatedIcon` - seems like the fileinfos get cached by the system and therefor the second call is faster    
+The programm uses the win32API call [SHGetFileInfo](https://www.pinvoke.net/default.aspx/shell32.shgetfileinfo) wich is already faster than `System.Drawing.Icon.ExtractAssociatedIcon` - seems like the fileinfos get cached by the system and therefore the second call is faster    
 Take a look [here](https://stackoverflow.com/questions/23077457/how-can-i-know-whether-the-next-shgetfileinfo-shgfi-icon-call-will-be-slow-fo) for more backgroundinfo   
 One optimisation could be to first load the file-list without icons and load the icons and file-info in a second background task...   
+UPDATE: Tried to update the icons in a background task - unfortunately this is way much slower for whatever reasons
    
 Hope this is useful!  
   
